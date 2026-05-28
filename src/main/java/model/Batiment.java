@@ -47,10 +47,8 @@ public abstract class Batiment {
         return res;
     }
 
-    // Déclaration du Design Pattern Prototype (Clonage polymorphe)
     public abstract Batiment cloner();
 
-    // --- GETTERS & SETTERS ---
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

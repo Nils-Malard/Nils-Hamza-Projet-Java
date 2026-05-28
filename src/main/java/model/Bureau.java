@@ -24,7 +24,6 @@ public class Bureau extends Batiment {
         return copie;
     }
 
-    // Getters et Setters
     public int getNbBureaux() { return nbBureaux; }
     public void setNbBureaux(int nbBureaux) { this.nbBureaux = nbBureaux; }
     public String getNomEntreprise() { return nomEntreprise; }

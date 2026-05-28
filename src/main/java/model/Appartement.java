@@ -24,7 +24,6 @@ public class Appartement extends Batiment {
         return copie;
     }
 
-    // Getters et Setters
     public int getEtage() { return etage; }
     public void setEtage(int etage) { this.etage = etage; }
     public String getNumeroAppt() { return numeroAppt; }

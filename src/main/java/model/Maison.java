@@ -24,7 +24,6 @@ public class Maison extends Batiment {
         return copie;
     }
 
-    // Getters et Setters
     public int getNbPieces() { return nbPieces; }
     public void setNbPieces(int nbPieces) { this.nbPieces = nbPieces; }
     public boolean isaGarage() { return aGarage; }

@@ -9,9 +9,8 @@ public class ReleveEnergetique {
     private LocalTime heure;
     private TypeEnergie typeEnergie;
     private double quantiteConsommee;
-    private double valeurFinanciere; // L'attribut manquant est ici !
+    private double valeurFinanciere;
 
-    // Constructeur complet
     public ReleveEnergetique(String idReleve, LocalDate date, LocalTime heure,
                              TypeEnergie typeEnergie, double quantiteConsommee, double valeurFinanciere) {
         this.idReleve = idReleve;
@@ -22,7 +21,6 @@ public class ReleveEnergetique {
         this.valeurFinanciere = valeurFinanciere;
     }
 
-    // --- GETTERS (Indispensables pour le reste du code) ---
 
     public String getIdReleve() {
         return idReleve;
