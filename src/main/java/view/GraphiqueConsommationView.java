@@ -59,7 +59,7 @@ public class GraphiqueConsommationView extends BorderPane {
 
     public GraphiqueConsommationView(TableauDeBord tdb) {
         this.tdb = tdb;
-        this.setStyle("-fx-padding: 15px; -fx-background-color: #f4f4f4;");
+        this.setStyle("-fx-padding: 15px; -fx-background-color: #E0E0E0;");
 
         // LISTE DES BÂTIMENTS (GAUCHE)
         VBox zoneGauche = new VBox(10);
