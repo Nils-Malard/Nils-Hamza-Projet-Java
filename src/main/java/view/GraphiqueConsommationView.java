@@ -61,7 +61,7 @@ public class GraphiqueConsommationView extends BorderPane {
         this.tdb = tdb;
         this.setStyle("-fx-padding: 15px; -fx-background-color: #f4f4f4;");
 
-        // --- LISTE DES BÂTIMENTS (GAUCHE) ---
+        // LISTE DES BÂTIMENTS (GAUCHE)
         VBox zoneGauche = new VBox(10);
         Label titreListe = new Label("Bâtiments Enregistrés");
         titreListe.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
@@ -71,12 +71,12 @@ public class GraphiqueConsommationView extends BorderPane {
         zoneGauche.getChildren().addAll(titreListe, listeBatiments);
         this.setLeft(zoneGauche);
 
-        // --- INTERFACE CENTRALE (ONGLETS) ---
+        // INTERFACE CENTRALE (ONGLETS)
         conteneurOnglets = new TabPane();
         conteneurOnglets.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         conteneurOnglets.setStyle("-fx-padding: 0 0 0 15px;");
 
-        // Onglet 1, 2, 3, 4 (Simplement instanciés pour la structure complète)
+        // Onglet 1, 2, 3, 4
         Tab tabHistorique = new Tab("Historique Chronologique");
         VBox boxHist = new VBox(10); titreHist = new Label("Sélectionnez un bâtiment...");
         barChartHistorique = new BarChart<>(new CategoryAxis(), new NumberAxis());
@@ -95,7 +95,6 @@ public class GraphiqueConsommationView extends BorderPane {
         lblTitreDiagnostic = new Label("Analyses"); lblReponseEnergieDominante = new Label("--"); lblReponseTendance = new Label("--"); lblReponseFacture = new Label("--"); listPicsConsommation = new ListView<>(); listPicsConsommation.setPrefHeight(80);
         boxDiag.getChildren().addAll(lblTitreDiagnostic, lblReponseEnergieDominante, lblReponseTendance, lblReponseFacture, listPicsConsommation); tabDiagnostic.setContent(boxDiag);
 
-        // NOUVEL ONGLET CENTRALISÉ : SMART INSIGHTS - API MULTIPLES
         Tab tabMeteo = new Tab("Hub API Externes");
         VBox boxMeteo = new VBox(15);
         boxMeteo.setStyle("-fx-padding: 20px; -fx-background-color: #ffffff; -fx-border-color: #ddd; -fx-border-radius: 5px;");
@@ -151,7 +150,6 @@ public class GraphiqueConsommationView extends BorderPane {
         zoneBas.getChildren().addAll(labelKpiConso, labelKpiCout, labelPireBatiment);
         this.setBottom(zoneBas);
 
-        // Écouteur interactif
         listeBatiments.getSelectionModel().selectedItemProperty().addListener((observable, anc, nouv) -> {
             if (nouv != null) {
                 tdb.setBatimentSelectionne(nouv);
@@ -166,9 +164,6 @@ public class GraphiqueConsommationView extends BorderPane {
         actualiserGraphiqueComparatif();
     }
 
-    /**
-     * ALGORITHME DE SYNCHRONISATION MULTI-API EN ARRIÈRE-PLAN
-     */
     private void executerAppelsMultiApiAsynchrones() {
         btnRafraichirDonneesExternes.setDisable(true);
         indicateurChargement.setVisible(true);
@@ -178,10 +173,8 @@ public class GraphiqueConsommationView extends BorderPane {
             protected Map<String, String> call() throws Exception {
                 Map<String, String> resultats = new HashMap<>();
 
-                // --- 1. INTERROGATION API 1 : GEOLOCALISATION (Simulée via coordonnées Paris) ---
                 resultats.put("ville", "Paris (75000), Île-de-France, France");
 
-                // --- 2. INTERROGATION API 2 : METEO (En direct via Open-Meteo) ---
                 String urlMeteo = "https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&current_weather=true";
                 String jsonMeteo = executerRequeteHttp(urlMeteo);
 
@@ -193,8 +186,6 @@ public class GraphiqueConsommationView extends BorderPane {
                     resultats.put("temperature", "15.0"); // Valeur de repli sécurisée
                 }
 
-                // --- 3. INTERROGATION API 3 : TARIFS (Simulée via index de marché fluctuant) ---
-                // Simule le prix du kWh mis à jour en direct (ex: entre 0.22€ et 0.29€ selon les heures)
                 double tarifDynamiqueKwh = 0.22 + (new java.util.Random().nextDouble() * 0.07);
                 resultats.put("tarif_kwh", String.valueOf(Math.round(tarifDynamiqueKwh * 100.0) / 100.0));
 
@@ -202,14 +193,12 @@ public class GraphiqueConsommationView extends BorderPane {
             }
         };
 
-        // Traitement des retours sur l'interface utilisateur
         chargeurMultiApi.setOnSucceeded(event -> {
             btnRafraichirDonneesExternes.setDisable(false);
             indicateurChargement.setVisible(false);
 
             Map<String, String> map = chargeurMultiApi.getValue();
 
-            // Mises à jour des éléments visuels
             lblGeolocVille.setText("📍 Emplacement détecté : " + map.get("ville"));
 
             double temp = Double.parseDouble(map.get("temperature"));
@@ -219,7 +208,6 @@ public class GraphiqueConsommationView extends BorderPane {
             double tarif = Double.parseDouble(map.get("tarif_kwh"));
             lblTarifKwh.setText("⚡ Prix actuel du kWh indexé sur le marché : " + tarif + " € / kWh");
 
-            // Calcul croisé avec le bâtiment sélectionné
             if (tdb.getBatimentSelectionne() != null) {
                 double factureAjustee = tdb.calculerFactureAjustee(tarif);
                 lblFactureAjusteeApi.setText("💰 Facture mensuelle recalculée au tarif du marché : " + factureAjustee + " €");
@@ -237,9 +225,6 @@ public class GraphiqueConsommationView extends BorderPane {
         new Thread(chargeurMultiApi).start();
     }
 
-    /**
-     * Méthode utilitaire pour effectuer des appels GET réseau propres
-     */
     private String executerRequeteHttp(String adresseUrl) throws Exception {
         URL url = new URL(adresseUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -291,7 +276,7 @@ public class GraphiqueConsommationView extends BorderPane {
 
     public void actualiserGraphiqueComparatif() {
         barChartComparatif.getData().clear(); List<Batiment> tous = GestionnaireBatiment.getInstance().getTousLesBatiments();
-        LocalDate fin = LocalDate.now(); LocalDate deb = fin.minusDays(30);
+        LocalDate fin = java.time.LocalDate.now(); LocalDate deb = fin.minusDays(30);
         XYChart.Series<String, Number> s = new XYChart.Series<>(); s.setName("Bâtiments");
         for (Batiment b : tous) { s.getData().add(new XYChart.Data<>(b.getNom(), b.getConsommationParPeriode(deb, fin))); }
         barChartComparatif.getData().add(s);
