@@ -1,4 +1,4 @@
-package views;
+package view;
 
 import javafx.concurrent.Task;
 import javafx.collections.FXCollections;
